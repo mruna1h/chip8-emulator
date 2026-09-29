@@ -331,6 +331,7 @@ bool Chip8::save_state(const std::string& filename) {
     file.write(reinterpret_cast<char*>(&sp), sizeof(sp));
     file.write(reinterpret_cast<char*>(&delay_timer), sizeof(delay_timer));
     file.write(reinterpret_cast<char*>(&sound_timer), sizeof(sound_timer));
+    file.write(reinterpret_cast<char*>(display), sizeof(display));
     
     file.close();
     std::cout << "State saved successfully to " << filename <<std::endl;
@@ -353,6 +354,7 @@ bool Chip8::load_state(const std::string& filename) {
     file.read(reinterpret_cast<char*>(&sp), sizeof(sp));
     file.read(reinterpret_cast<char*>(&delay_timer), sizeof(delay_timer));
     file.read(reinterpret_cast<char*>(&sound_timer), sizeof(sound_timer));
+    file.read(reinterpret_cast<char*>(display), sizeof(display));
 
     file.close();
     
