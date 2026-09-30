@@ -11,6 +11,7 @@
 #include <SDL2/SDL_video.h>
 #include <cstdint>
 #include <iostream>
+#include <cmath>
 
 const int SCALE = 10; // Each pixel is 10x10 screen pixels
 const int WIDTH = 64*SCALE;
@@ -66,6 +67,14 @@ void draw_graphics(SDL_Renderer* renderer, Chip8& chip8, int color_theme){
     if(color_theme == 0) SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     else if(color_theme == 1) SDL_SetRenderDrawColor(renderer, 255, 176, 0, 255);
     else if(color_theme == 2) SDL_SetRenderDrawColor(renderer, 51, 255, 0, 255);
+    else if (color_theme == 4) { // RGB Rainbow Mode
+        Uint32 time = SDL_GetTicks();
+        // Sine waves out of phase to create a shifting rainbow
+        uint8_t r = (std::sin(time * 0.003) + 1) * 127.5;
+        uint8_t g = (std::sin(time * 0.003 + 2) + 1) * 127.5;
+        uint8_t b = (std::sin(time * 0.003 + 4) + 1) * 127.5;
+        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+    }
     else SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
     
     for(int y=0; y<32; y++){
@@ -79,7 +88,6 @@ void draw_graphics(SDL_Renderer* renderer, Chip8& chip8, int color_theme){
     }
     SDL_RenderPresent(renderer);
 }
-
 void handle_input(Chip8& chip8, bool& running, int& speed, int& color_theme){
     SDL_Event event;
 
@@ -97,7 +105,7 @@ void handle_input(Chip8& chip8, bool& running, int& speed, int& color_theme){
             
             //Color updation
             if(event.key.keysym.sym == SDLK_t) {
-                color_theme = (color_theme + 1) % 4; 
+                color_theme = (color_theme + 1) % 5; 
                 chip8.draw_flag = true;
             }
             
